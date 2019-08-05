@@ -1,0 +1,73 @@
+<% include partials/header %>
+    <div class="hero-wrap hero-bread" style="background-image: url('/images/bg_6.jpg');">
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Blog</a></span> <span>Database</span></p>
+            <h1 class="mb-0 bread">Blog Database</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="container" style="margin-bottom: 30px;">
+    <div class="row">
+        <div class="col-lg-12 col-md-5 col-sm-6">
+            <div class="form-group" style="margin-top: 30px;">
+                <a href="/blog/blog-post" class="btn btn-primary" >Post Blog</a>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Blog Title</th>
+                    <th>Blog Image</th>
+                    <th>Blog Description</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% blogs.forEach(function (blog) {%>
+                <tr>
+                    <td><%=blog.blogTitle%></td>
+                    <td>
+                        <% if (blog.image == "") { %>
+                        <img id="noimage" src="/images/noimage.png">
+                        <% } else {%>
+                        <img id="noimage" src="/post_image/<%=blog._id%>/<%= blog.image %>" style="width: 200px;">
+                        <% }%>
+                    </td>
+                    <td><%=blog.blogDescription.substr(0,100)%></td>
+                    <td>
+                        <div class="form-group">
+                            <a href="/blog/delete/<%=blog._id%>" class="btn btn-sm btn-danger">Delete</a><br>
+                        </div>
+                        <div class="form-group">
+                            <a href="/blog/edit/<%=blog._id%>" class="btn btn-sm btn-primary">Edit</a><br>
+                        </div>
+                    </td>
+                </tr>
+                <% }) %>
+                </tbody>
+            </table>
+            <% if(totalItem > 0) {%>
+            <div class="block-27">
+                <ul class="pagination">
+                    <% if (currentPage !== 1 && previousPage !== 1) { %>
+                    <li><a href="?page=1">1</a></li>
+                    <% } %>
+                    <% if (hasPreviousPage) { %>
+                    <li><a href="?page=<%= previousPage %>"><%= previousPage %></a></li>
+                    <% } %>
+                    <li class="active"><a href="?page=<%= currentPage %>"><%= currentPage %></a></li>
+                    <% if (hasNextPage) { %>
+                    <li><a href="?page=<%= nextPage %>"><%= nextPage %></a></li>
+                    <% } %>
+                    <% if (lastPage !== currentPage && nextPage !== lastPage) { %>
+                    <li><a href="?page=<%= lastPage %>"><%= lastPage %></a></li>
+                    <% } %>
+                </ul>
+            </div>
+            <%}%>
+        </div>
+    </div>
+</div>
+	<% include partials/footer %>

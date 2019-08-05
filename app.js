@@ -18,7 +18,7 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
-
+var fileUpload = require('express-fileupload');
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -46,6 +46,11 @@ const workSingleController = require('./controllers/work-single');
  * Create Express server.
  */
 const app = express();
+/**
+ * File Upload
+ */
+app.use(fileUpload());
+
 
 /**
  * Connect to MongoDB.
@@ -77,7 +82,25 @@ app.use(sass({
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressValidator());
+app.use(expressValidator({
+  customValidators: {
+    isImage: function (value, filename) {
+      var extension = (path.extname(filename)).toLowerCase();
+      switch (extension) {
+        case '.jpg':
+          return '.jpg';
+        case '.jpeg':
+          return '.jpeg';
+        case '.png':
+          return '.png';
+        case '':
+          return '.jpg';
+        default:
+          return false;
+      }
+    }
+  }
+}));
 app.use(session({
   resave: true,
   saveUninitialized: true,
@@ -92,7 +115,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/contact/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
+  if (req.path === '/shop/priceProductsDatabase' || req.path === '/shop/add-product' || req.path === '/blog/blog-post' || req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/shop/edit-product/') || req.path.includes('/contact/edit/') || req.path.includes('/blog/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -151,11 +174,27 @@ app.use('/webfonts',
 app.get('/', homeController.index);
 app.get('/about', aboutController.index);
 app.get('/cart', cartController.index);
+app.get('/product-single', productSingleController.index);
+app.get('/product-single/readmore/:id', productSingleController.readmore);
 app.get('/shop', shopController.index);
+app.get('/shop/add-product', shopController.getAddProduct);
+app.post('/shop/add-product', shopController.postAddProduct);
+app.get('/shop/delete-product/:id', shopController.getDeleteProduct);
+app.get('/shop/edit-product/:id', shopController.getEditProduct);
+app.post('/shop/edit-product/:id', shopController.postEditProduct);
+app.get('/shop/productsDatabase', shopController.getProductsDatabase);
+app.get('/shop/searchProductsDatabase/:category/:subcategory', shopController.getSearchProductsDatabase);
+app.post('/shop/priceProductsDatabase', shopController.getPriceProductsDatabase);
 app.get('/blog', blogController.index);
+app.get('/blog/blog-post', blogController.getBlogPost);
+app.post('/blog/blog-post', blogController.postBlogPost);
+app.get('/blog/read-more/:id', blogController.getReadMore);
+app.get('/blog/blogDatabase', blogController.getBlogDatabase);
+app.get('/blog/delete/:id', blogController.getDeleteBlog);
+app.get('/blog/edit/:id', blogController.getEditBlogPost);
+app.post('/blog/edit/:id', blogController.postEditBlogPost);
 app.get('/checkout', checkoutController.index);
 app.get('/blog-single', blogSingleController.index);
-app.get('/product-single', productSingleController.index);
 app.get('/contact', contactController.index);
 app.post('/contact/saveContact', contactController.postSaveContact);
 app.get('/contact/delete/:id', contactController.getDeleteContact);
