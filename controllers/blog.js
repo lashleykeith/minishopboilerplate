@@ -89,10 +89,7 @@ exports.getBlogDatabase = (req,res)=>{
       hasPreviousPage: page > 1,
       nextPage: page + 1,
       previousPage: page - 1,
-<<<<<<< HEAD
       totalItem:totalItem,
-=======
->>>>>>> 56cbf2de9cfe259f29dd7ff214a74fe10ad3c3ef
       lastPage: Math.ceil(totalItem / ITEMS_PER_PAGE)
     });
   });
