@@ -115,7 +115,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
+<<<<<<< HEAD
   if (req.path === '/shop/priceProductsDatabase' || req.path === '/shop/add-product' || req.path === '/blog/blog-post' || req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/shop/edit-product/') || req.path.includes('/contact/edit/') || req.path.includes('/blog/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
+=======
+  if (req.path === '/blog/blog-post' || req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/contact/edit/') || req.path.includes('/blog/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
+>>>>>>> 56cbf2de9cfe259f29dd7ff214a74fe10ad3c3ef
     next();
   } else {
     lusca.csrf()(req, res, next);
