@@ -216,5 +216,58 @@ exports.getPriceProductsDatabase = (req, res) => {
   });
 };
 
+exports.getSearchProducts = (req, res) => {
+  var page = req.query.page||1;
+  var category = req.params.category;
+  var subcategory = req.params.subcategory;
+  let totalItem;
+  Product.find({category:category, subcategory:subcategory})
+    .countDocuments()
+    .then((numberTest) => {
+      totalItem = numberTest;
+      return Product.find({category:category, subcategory:subcategory})
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    }).then((products) => {
+    res.render('shop', {
+      title: ' Shop',
+      products,
+      totalProducts:totalItem,
+      currentPage: page,
+      hasNextPage: ITEMS_PER_PAGE * page < totalItem,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      totalItem:totalItem,
+      lastPage: Math.ceil(totalItem / ITEMS_PER_PAGE)
+    });
+  });
+};
 
-
+exports.getPriceProducts = (req, res) => {
+  var page = req.query.page||1;
+  var priceFrom = req.body.priceFrom;
+  var priceTo = req.body.priceTo;
+  let totalItem;
+  Product.find({price: {$gte: priceFrom, $lte: priceTo}})
+    .countDocuments()
+    .then((numberTest) => {
+      totalItem = numberTest;
+      return Product.find({price: {$gte: priceFrom, $lte: priceTo}})
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    }).then((products) => {
+    res.render('shop', {
+      title: ' Shop',
+      products,
+      totalProducts:totalItem,
+      currentPage: page,
+      hasNextPage: ITEMS_PER_PAGE * page < totalItem,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      totalItem:totalItem,
+      lastPage: Math.ceil(totalItem / ITEMS_PER_PAGE)
+    });
+  });
+};

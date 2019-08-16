@@ -115,7 +115,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/shop/priceProductsDatabase' || req.path === '/shop/add-product' || req.path === '/blog/blog-post' || req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/shop/edit-product/') || req.path.includes('/contact/edit/') || req.path.includes('/blog/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
+  if (req.path === '/shop/priceProducts' || req.path === '/shop/priceProductsDatabase' || req.path === '/shop/add-product' || req.path === '/blog/blog-post' || req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/shop/edit-product/') || req.path.includes('/contact/edit/') || req.path.includes('/blog/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -126,6 +126,7 @@ app.use((req, res, next) => {
 app.disable('x-powered-by');
 app.use((req, res, next) => {
   res.locals.user = req.user;
+  res.locals.cart = req.session.cart;
   next();
 });
 app.use((req, res, next) => {
@@ -173,7 +174,18 @@ app.use('/webfonts',
  */
 app.get('/', homeController.index);
 app.get('/about', aboutController.index);
+
+
 app.get('/cart', cartController.index);
+app.get('/cart/add-to-cart/:id/:category', cartController.getAddToCart);
+app.get('/cart/increase-quantity/:id/:category', cartController.getIncreaseQuantity);
+app.get('/cart/decrease-quantity/:id/:category', cartController.getDecreaseQuantity);
+app.get('/cart/delete-product/:id/:category', cartController.getDeleteProduct);
+app.get('/cart/empty-cart', cartController.getEmptyCart);
+
+
+
+
 app.get('/product-single', productSingleController.index);
 app.get('/product-single/readmore/:id', productSingleController.readmore);
 app.get('/shop', shopController.index);
@@ -185,6 +197,13 @@ app.post('/shop/edit-product/:id', shopController.postEditProduct);
 app.get('/shop/productsDatabase', shopController.getProductsDatabase);
 app.get('/shop/searchProductsDatabase/:category/:subcategory', shopController.getSearchProductsDatabase);
 app.post('/shop/priceProductsDatabase', shopController.getPriceProductsDatabase);
+app.get('/shop/searchProducts/:category/:subcategory', shopController.getSearchProducts);
+app.post('/shop/priceProducts', shopController.getPriceProducts);
+
+
+
+
+
 app.get('/blog', blogController.index);
 app.get('/blog/blog-post', blogController.getBlogPost);
 app.post('/blog/blog-post', blogController.postBlogPost);
