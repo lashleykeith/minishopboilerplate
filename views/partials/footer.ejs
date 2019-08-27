@@ -143,6 +143,19 @@
           imageUploadURL: '/upload_image'
         }
       )
+      $('#PTC1').click(function(e){
+      if (document.getElementById('checkPaypal').checked) {
+        e.preventDefault();
+        document.getElementById('DeliveryStatus').value = "1";
+        var delayInMilliseconds = 2000; //1 second
+        setTimeout(function() {
+          $("#PTC2").click();
+        }, delayInMilliseconds);
+      }else{
+        console.log('not paypal')
+        document.getElementById('DeliveryStatus').value = "0";
+      }
+      })
     </script>
     </body>
   </html>

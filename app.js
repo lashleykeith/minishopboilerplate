@@ -115,7 +115,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/shop/priceProducts' || req.path === '/shop/priceProductsDatabase' || req.path === '/shop/add-product' || req.path === '/blog/blog-post' || req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/shop/edit-product/') || req.path.includes('/contact/edit/') || req.path.includes('/blog/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
+  if (req.path === '/checkout/place-order' || req.path === '/shop/priceProducts' || req.path === '/shop/priceProductsDatabase' || req.path === '/shop/add-product' || req.path === '/blog/blog-post' || req.path === '/contact' || req.path === '/contact/saveContact' || req.path.includes('/shop/edit-product/') || req.path.includes('/contact/edit/') || req.path.includes('/blog/edit/') || req.path.includes('/contact/sendEmail/') || req.path.includes('/contact/sendEmailPage/')) {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -182,6 +182,7 @@ app.get('/cart/increase-quantity/:id/:category', cartController.getIncreaseQuant
 app.get('/cart/decrease-quantity/:id/:category', cartController.getDecreaseQuantity);
 app.get('/cart/delete-product/:id/:category', cartController.getDeleteProduct);
 app.get('/cart/empty-cart', cartController.getEmptyCart);
+app.get('/cart/checkout', cartController.getToCheckout);
 
 
 
@@ -212,7 +213,11 @@ app.get('/blog/blogDatabase', blogController.getBlogDatabase);
 app.get('/blog/delete/:id', blogController.getDeleteBlog);
 app.get('/blog/edit/:id', blogController.getEditBlogPost);
 app.post('/blog/edit/:id', blogController.postEditBlogPost);
+
 app.get('/checkout', checkoutController.index);
+app.post('/checkout/place-order', checkoutController.postPlaceOrder);
+
+
 app.get('/blog-single', blogSingleController.index);
 app.get('/contact', contactController.index);
 app.post('/contact/saveContact', contactController.postSaveContact);

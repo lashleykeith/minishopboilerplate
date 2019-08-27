@@ -14,7 +14,6 @@ exports.index = (req, res) => {
   });
 };
 
-
 exports.getAddToCart = (req, res) => {
   const { id } = req.params;
   Product.findOne({ _id: id }, (err, p) => {
@@ -103,4 +102,12 @@ exports.getDeleteProduct = (req, res) => {
 exports.getEmptyCart = (req, res) => {
   delete req.session.cart;
   res.redirect('/cart');
+};
+
+exports.getToCheckout = (req, res) => {
+  res.render('checkout', {
+    title: 'Checkout',
+    cart: req.session.cart,
+    PaypalDelivery: null
+  });
 };

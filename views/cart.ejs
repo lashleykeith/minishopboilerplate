@@ -31,11 +31,9 @@
 								</thead>
 								<tbody>
 								<% var subTotal = 0; %>
-								<% var productTotalPrice = 0; %>
 								<% cart.forEach(function(product){ %>
-								<% var sub = parseFloat(product.productQuantity * product.productPrice).toFixed(2) %>
-								<% subTotal += +sub %>
-								<% subTotal = parseFloat(subTotal).toFixed(2) %>
+								<% var sub = parseFloat(product.productQuantity * product.productPrice) %>
+								<% subTotal = subTotal + sub %>
 									<tr class="text-center">
 										<td class="product-remove">
 											<a href="/cart/delete-product/<%=product.productId%>/<%=product.productCategory%>">
@@ -70,8 +68,6 @@
 
 
 
-
-
 				<div class="row justify-content-start">
 					<div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
 						<div class="cart-total mb-3">
@@ -91,13 +87,16 @@
 							<hr>
 							<p class="d-flex total-price">
 								<span>Total</span>
-								<span>$17.60</span>
+								<span>$<%=subTotal%></span>
 							</p>
 						</div>
-						<p class="text-center"><a href="checkout.html" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+						<p class="text-center">
+							<a href="cart/checkout"  class="btn btn-primary py-3 px-4">
+								Proceed to Checkout
+							</a>
+						</p>
 					</div>
 				</div>
-
 			</div>
 		</section>
 <%}else{%>
